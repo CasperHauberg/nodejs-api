@@ -24,13 +24,13 @@ app.post("/", (req, res) => {
   if (firstName.length < FIRST_NAME_MIN_LEN) {
     res
       .status(400)
-      .send(`Firstname must be smaller than ${FIRST_NAME_MIN_LEN} characters`);
+      .send(`Firstname must be greater than ${FIRST_NAME_MIN_LEN} characters`);
   }
 
   if (firstName.length > FIRST_NAME_MAX_LEN) {
     res
       .status(400)
-      .send(`Firstname must be greater than ${FIRST_NAME_MAX_LEN} characters`);
+      .send(`Firstname must be smaller than ${FIRST_NAME_MAX_LEN} characters`);
   }
 
   if (!lastName) {
@@ -40,13 +40,13 @@ app.post("/", (req, res) => {
   if (lastName.length < LAST_NAME_MIN_LEN) {
     res
       .status(400)
-      .send(`Lastname must be smaller than ${LAST_NAME_MIN_LEN} characters`);
+      .send(`Lastname must be greater than ${LAST_NAME_MIN_LEN} characters`);
   }
 
   if (lastName.length > LAST_NAME_MAX_LEN) {
     res
       .status(400)
-      .send(`Lastname must be greater than ${LAST_NAME_MAX_LEN} characters`);
+      .send(`Lastname must be smaller than ${LAST_NAME_MAX_LEN} characters`);
   }
 
   if (!email) {
