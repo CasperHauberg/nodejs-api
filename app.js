@@ -6,6 +6,7 @@ const FIRST_NAME_MIN_LEN = 2;
 const FIRST_NAME_MAX_LEN = 20;
 const LAST_NAME_MIN_LEN = 2;
 const LAST_NAME_MAX_LEN = 20;
+const PHONE_NUMBER_MAX_LEN = 8;
 
 app.use(express.json());
 
@@ -54,6 +55,10 @@ app.post("/", (req, res) => {
 
   if (!phoneNumber) {
     res.status(400).send("Phone number is required.");
+  }
+
+  if (phoneNumber.length !== PHONE_NUMBER_MAX_LEN) {
+    res.status(400).send(`Phone number must be ${PHONE_NUMBER_MAX_LEN} digits`);
   }
 
   if (!password) {
