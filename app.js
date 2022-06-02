@@ -17,8 +17,8 @@ app.get("/", (req, res) => {
 
 app.post(
   "/",
-  body("firstName").isLength({ min: 2 }),
-  body("lastName").isLength({ min: 2 }),
+  body("firstName").toUpperCase.isLength({ min: 2 }),
+  body("lastName").toUpperCase.isLength({ min: 2 }),
   body("email").isEmail(),
   body("phone").isMobilePhone("da-DK"),
   body("password").isStrongPassword(), // Default: min length 8 characters, 1 lowercase, 1 uppercase, 1 number, 1 symbol
