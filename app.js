@@ -1,4 +1,5 @@
 const express = require("express");
+const { body, validationResult } = require("express-validator");
 const app = express();
 const port = 3000;
 
@@ -14,59 +15,76 @@ app.get("/", (req, res) => {
   res.send("<h1>Does this work?</h1>");
 });
 
-app.post("/", (req, res) => {
-  const { firstName, lastName, email, phoneNumber, password } = req.body;
+app.post(
+  "/",
+  // username must be an email
+  body("firstName").isLength({ min: 2 }),
+  // password must be at least 5 chars long
+  body("lastName").isLength({ min: 2 }),
+  (req, res) => {
+    // Finds the validation errors in this request and wraps them in an object with handy functions
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  if (!firstName) {
-    res.status(400).send("firstName is required.");
+    res.status(200).send("User Created!");
   }
+);
 
-  if (firstName.length < FIRST_NAME_MIN_LEN) {
-    res
-      .status(400)
-      .send(`Firstname must be greater than ${FIRST_NAME_MIN_LEN} characters`);
-  }
+// app.post("/", (req, res) => {
+//   const { firstName, lastName, email, phoneNumber, password } = req.body;
 
-  if (firstName.length > FIRST_NAME_MAX_LEN) {
-    res
-      .status(400)
-      .send(`Firstname must be smaller than ${FIRST_NAME_MAX_LEN} characters`);
-  }
+//   if (!firstName) {
+//     res.status(400).send("firstName is required.");
+//   }
 
-  if (!lastName) {
-    res.status(400).send("lastName is required.");
-  }
+//   if (firstName.length < FIRST_NAME_MIN_LEN) {
+//     res
+//       .status(400)
+//       .send(`Firstname must be greater than ${FIRST_NAME_MIN_LEN} characters`);
+//   }
 
-  if (lastName.length < LAST_NAME_MIN_LEN) {
-    res
-      .status(400)
-      .send(`Lastname must be greater than ${LAST_NAME_MIN_LEN} characters`);
-  }
+//   if (firstName.length > FIRST_NAME_MAX_LEN) {
+//     res
+//       .status(400)
+//       .send(`Firstname must be smaller than ${FIRST_NAME_MAX_LEN} characters`);
+//   }
 
-  if (lastName.length > LAST_NAME_MAX_LEN) {
-    res
-      .status(400)
-      .send(`Lastname must be smaller than ${LAST_NAME_MAX_LEN} characters`);
-  }
+//   if (!lastName) {
+//     res.status(400).send("lastName is required.");
+//   }
 
-  if (!email) {
-    res.status(400).send("Email is required.");
-  }
+//   if (lastName.length < LAST_NAME_MIN_LEN) {
+//     res
+//       .status(400)
+//       .send(`Lastname must be greater than ${LAST_NAME_MIN_LEN} characters`);
+//   }
 
-  if (!phoneNumber) {
-    res.status(400).send("Phone number is required.");
-  }
+//   if (lastName.length > LAST_NAME_MAX_LEN) {
+//     res
+//       .status(400)
+//       .send(`Lastname must be smaller than ${LAST_NAME_MAX_LEN} characters`);
+//   }
 
-  if (phoneNumber.length !== PHONE_NUMBER_MAX_LEN) {
-    res.status(400).send(`Phone number must be ${PHONE_NUMBER_MAX_LEN} digits`);
-  }
+//   if (!email) {
+//     res.status(400).send("Email is required.");
+//   }
 
-  if (!password) {
-    res.status(400).send("Password is required.");
-  }
+//   if (!phoneNumber) {
+//     res.status(400).send("Phone number is required.");
+//   }
 
-  res.status(200).send("User was succesfully uploaded");
-});
+//   if (phoneNumber.length !== PHONE_NUMBER_MAX_LEN) {
+//     res.status(400).send(`Phone number must be ${PHONE_NUMBER_MAX_LEN} digits`);
+//   }
+
+//   if (!password) {
+//     res.status(400).send("Password is required.");
+//   }
+
+//   res.status(200).send("User was succesfully uploaded");
+// });
 
 app.put("/", (req, res) => {
   res.send("Put request");
