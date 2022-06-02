@@ -4,6 +4,8 @@ const port = 3000;
 
 const FIRST_NAME_MIN_LEN = 2;
 const FIRST_NAME_MAX_LEN = 20;
+const LAST_NAME_MIN_LEN = 2;
+const LAST_NAME_MAX_LEN = 20;
 
 app.use(express.json());
 
@@ -21,7 +23,7 @@ app.post("/", (req, res) => {
   if (firstName.length < FIRST_NAME_MIN_LEN) {
     res
       .status(400)
-      .send(`Firstname must be greater than ${FIRST_NAME_MIN_LEN} characters`);
+      .send(`Firstname must be smaller than ${FIRST_NAME_MIN_LEN} characters`);
   }
 
   if (firstName.length > FIRST_NAME_MAX_LEN) {
@@ -32,6 +34,18 @@ app.post("/", (req, res) => {
 
   if (!lastName) {
     res.status(400).send("lastName is required.");
+  }
+
+  if (lastName.length < LAST_NAME_MIN_LEN) {
+    res
+      .status(400)
+      .send(`Lastname must be smaller than ${LAST_NAME_MIN_LEN} characters`);
+  }
+
+  if (lastName.length > LAST_NAME_MAX_LEN) {
+    res
+      .status(400)
+      .send(`Lastname must be greater than ${LAST_NAME_MAX_LEN} characters`);
   }
 
   if (!email) {
