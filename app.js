@@ -7,7 +7,6 @@ const FIRST_NAME_MIN_LEN = 2;
 const FIRST_NAME_MAX_LEN = 20;
 const LAST_NAME_MIN_LEN = 2;
 const LAST_NAME_MAX_LEN = 20;
-const PHONE_NUMBER_MAX_LEN = 8;
 
 app.use(express.json());
 
@@ -17,8 +16,11 @@ app.get("/", (req, res) => {
 
 app.post(
   "/",
-  body("firstName").toUpperCase.isLength({ min: 2 }),
-  body("lastName").toUpperCase.isLength({ min: 2 }),
+  body("firstName").isLength({
+    min: FIRST_NAME_MIN_LEN,
+    max: FIRST_NAME_MAX_LEN,
+  }),
+  body("lastName").isLength({ min: LAST_NAME_MIN_LEN, max: LAST_NAME_MAX_LEN }),
   body("email").isEmail(),
   body("phone").isMobilePhone("da-DK"),
   body("password").isStrongPassword(), // Default: min length 8 characters, 1 lowercase, 1 uppercase, 1 number, 1 symbol
