@@ -17,12 +17,10 @@ app.get("/", (req, res) => {
 
 app.post(
   "/",
-  // username must be an email
   body("firstName").isLength({ min: 2 }),
-  // password must be at least 5 chars long
   body("lastName").isLength({ min: 2 }),
+  body("email").isEmail(),
   (req, res) => {
-    // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
