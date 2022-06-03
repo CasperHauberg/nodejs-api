@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const mongodb = require("mongodb");
 const MONGODB_PASSWORD = require("./private/password");
 const MongoClient = mongodb.MongoClient;
+const URI = `mongodb+srv://nodejs:${MONGODB_PASSWORD}@nodejs-api.ghercv6.mongodb.net/users?retryWrites=true&w=majority`;
 const app = express();
 const port = 3000;
 
@@ -14,7 +15,27 @@ const LAST_NAME_MAX_LEN = 20;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("<h1>Does this work?</h1>");
+  const client = new MongoClient(URI);
+
+  async function run() {
+    try {
+      await client.connect();
+      const database = client.db("test");
+      const movies = database.collection("users");
+      const query = {};
+      const options = {};
+      const cursor = await movies.find(query, options).toArray();
+
+      if (!cursor) {
+        console.log("No documents found!");
+      }
+
+      res.json(cursor);
+    } finally {
+      await client.close();
+    }
+  }
+  run().catch(console.dir);
 });
 
 app.post(
@@ -35,9 +56,7 @@ app.post(
 
     const { firstName, lastName, email, phone, password } = req.body;
 
-    const client = new MongoClient(
-      `mongodb+srv://nodejs:${MONGODB_PASSWORD}@nodejs-api.ghercv6.mongodb.net/users?retryWrites=true&w=majority`
-    );
+    const client = new MongoClient(URI);
 
     async function insertUser() {
       try {
