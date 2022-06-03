@@ -1,5 +1,8 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
+const mongodb = require("mongodb");
+const MONGODB_PASSWORD = require("./private/password");
+const MongoClient = mongodb.MongoClient;
 const app = express();
 const port = 3000;
 
@@ -30,7 +33,36 @@ app.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    res.status(200).send("User Created!");
+    const { firstName, lastName, email, phone, password } = req.body;
+
+    const client = new MongoClient(
+      `mongodb+srv://nodejs:${MONGODB_PASSWORD}@nodejs-api.ghercv6.mongodb.net/users?retryWrites=true&w=majority`
+    );
+
+    async function insertUser() {
+      try {
+        await client.connect();
+
+        const database = client.db("test");
+        const users = database.collection("users");
+
+        const doc = {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          phone: phone,
+          password: password,
+        };
+
+        const result = await users.insertOne(doc);
+
+        res.status(200).send("User was inserted");
+      } finally {
+        await client.close();
+      }
+    }
+
+    insertUser();
   }
 );
 
